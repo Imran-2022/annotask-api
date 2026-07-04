@@ -68,23 +68,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database configuration - supports both SQLite (dev) and PostgreSQL (production)
+# Database configuration - prefers PostgreSQL in deployment and supports SQLite for local dev
 if os.getenv('DATABASE_URL'):
     import dj_database_url
     DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
     }
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql' if os.getenv('DB_ENGINE') == 'postgresql' else 'django.db.backends.sqlite3',
-            'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
-            'USER': os.getenv('DB_USER', ''),
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', ''),
-            'PORT': os.getenv('DB_PORT', '5432'),
+    db_engine = os.getenv('DB_ENGINE', '').lower()
+    db_host = os.getenv('DB_HOST', '').strip()
+    db_name = os.getenv('DB_NAME', '').strip()
+
+    if db_engine == 'postgresql' or db_host or db_name:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': db_name or 'task_db',
+                'USER': os.getenv('DB_USER', ''),
+                'PASSWORD': os.getenv('DB_PASSWORD', ''),
+                'HOST': db_host,
+                'PORT': os.getenv('DB_PORT', '5432'),
+            }
         }
-    }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'

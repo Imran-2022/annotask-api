@@ -19,6 +19,12 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
+### 3a. PostgreSQL setup for deployment
+- Create or attach a PostgreSQL service in Railway.
+- In the backend service, set DATABASE_URL to the Railway Postgres connection URL.
+- The app will automatically use PostgreSQL whenever DATABASE_URL is present.
+- For local development, you can still use SQLite by leaving DATABASE_URL empty and using the default local database file.
+
 ### 4. Create superuser (optional, for admin panel)
 ```
 python manage.py createsuperuser
