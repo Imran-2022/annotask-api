@@ -1,2 +1,2 @@
-release: python manage.py migrate --no-input
-web: python manage.py migrate --no-input && python manage.py collectstatic --no-input && gunicorn config.wsgi:application
+release: python manage.py migrate --no-input && python manage.py collectstatic --no-input
+web: ./start.sh
