@@ -116,6 +116,20 @@ STATICFILES_STORAGE = os.getenv(
 # CORS Configuration - allow frontend in production
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(',')
 
+# CSRF trusted origins - include production Railway origin(s)
+CSRF_TRUSTED_ORIGINS = [
+    o.strip()
+    for o in os.getenv(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://web-production-bdb7b.up.railway.app,https://web-production-fff03.up.railway.app'
+    ).split(',')
+    if o.strip()
+]
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Django REST Framework Configuration
