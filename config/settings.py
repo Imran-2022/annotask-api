@@ -125,8 +125,8 @@ STATICFILES_STORAGE = os.getenv(
     'whitenoise.storage.CompressedStaticFilesStorage'
 )
 
-# CORS Configuration - allow frontend in production
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(',')
+# CORS Configuration - allow frontend in production and local dev
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://localhost:4173,http://localhost:5173').split(',')
 
 # CSRF trusted origins - include production Railway origin(s)
 CSRF_TRUSTED_ORIGINS = [
