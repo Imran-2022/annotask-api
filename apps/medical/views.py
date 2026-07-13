@@ -13,8 +13,8 @@ class MedicalImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
     filter_backends = [OrderingFilter]
-    ordering_fields = ['uploaded_at']
-    ordering = ['-uploaded_at']
+    ordering_fields = ['uploaded_at', 'id']
+    ordering = ['uploaded_at', 'id']
     
     def get_queryset(self):
         return MedicalImage.objects.filter(user=self.request.user)
