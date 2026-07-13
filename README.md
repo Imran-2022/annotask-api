@@ -1,59 +1,83 @@
-README for Task Management Backend
-==================================
+Task Management + Image Annotation Backend
+===========================================
 
-## Setup Instructions
+## Local Setup
 
-### 1. Create virtual environment
-```
+### Requirements
+- Python 3.13+
+- pip
+- sqlite3 (default local database)
+
+### 1. Create and activate virtual environment
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# macOS / Linux
+source venv/bin/activate
+# Windows PowerShell
+venv\Scripts\Activate.ps1
+# Windows CMD
+venv\Scripts\activate
 ```
 
-### 2. Install dependencies
-```
+### 2. Install Python dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run migrations
+### 3. Optional environment variables
+Create `.env` in the backend root to override defaults. Example values:
+```bash
+SECRET_KEY=django-insecure-change-this
+DEBUG=True
+DATABASE_URL=
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
+
+### 4. Apply database migrations
+```bash
 python manage.py migrate
 ```
 
-### 3a. PostgreSQL setup for deployment
-- Create or attach a PostgreSQL service in Railway.
-- In the backend service, set DATABASE_URL to the Railway Postgres connection URL.
-- The app will automatically use PostgreSQL whenever DATABASE_URL is present.
-- For local development, you can still use SQLite by leaving DATABASE_URL empty and using the default local database file.
-
-### 4. Create superuser (optional, for admin panel)
-```
-python manage.py createsuperuser
-```
-
-### 5. Run development server
-```
+### 5. Run the development server
+```bash
 python manage.py runserver
 ```
 
-The server will run on http://localhost:8000
+The backend service will run on `http://localhost:8000` by default.
 
-## API Endpoints
+## Notes
+- Local development uses SQLite by default.
+- If `DATABASE_URL` is provided, the app uses PostgreSQL via dj-database-url.
+- The backend uses Django + Django REST Framework with JWT authentication.
+
+## Supported API Endpoints
 
 ### Authentication
-- POST `/api/auth/auth/register/` - Register new user
-- POST `/api/auth/auth/login/` - Login user
-- POST `/api/auth/auth/logout/` - Logout user
-- GET `/api/auth/auth/me/` - Get current user info
+- POST `/api/auth/auth/register/`
+- POST `/api/auth/auth/login/`
+- POST `/api/auth/auth/logout/`
+- GET `/api/auth/auth/me/`
 
-### Tasks
-- GET `/api/tasks/` - Get all user's tasks
-- POST `/api/tasks/` - Create new task
-- PUT `/api/tasks/{id}/` - Update task
-- DELETE `/api/tasks/{id}/` - Delete task
-- GET `/api/tasks/by_date/?date=YYYY-MM-DD` - Get tasks for specific date
-- GET `/api/tasks/by_date_range/?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD` - Get tasks for date range
-- POST `/api/tasks/{id}/change_status/` - Change task status
-- POST `/api/tasks/reorder/` - Reorder tasks
+### Task Management
+- GET `/api/tasks/`
+- POST `/api/tasks/`
+- PUT `/api/tasks/{id}/`
+- DELETE `/api/tasks/{id}/`
+- GET `/api/tasks/by_date/?date=YYYY-MM-DD`
+- GET `/api/tasks/by_date_range/?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`
+- POST `/api/tasks/{id}/change_status/`
+- POST `/api/tasks/reorder/`
 
-## Admin Panel
-Access admin panel at `/admin/` with superuser credentials
+### Image annotation and media
+- GET `/api/images/`
+- POST `/api/images/` (image upload)
+- POST `/api/images/upload/` (multi-file upload)
+- GET `/api/annotations/`
+- POST `/api/annotations/`
+- PUT `/api/annotations/{id}/`
+- DELETE `/api/annotations/{id}/`
+
+## Project alignment
+This backend is aligned with the 404 project requirements: Django backend, task persistence, JWT auth, image upload, and annotation persistence via REST API.
+
